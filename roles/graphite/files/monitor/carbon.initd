@@ -1,0 +1,79 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          carbon
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+### END INIT INFO
+
+. /lib/lsb/init-functions
+
+export PYTHONPATH="/opt/graphite/lib:$PYTHONPATH"
+INSTANCES=`grep "^\[cache" /opt/graphite/conf/carbon.conf | cut -d \[ -f 2 | cut -d \] -f 1 | cut -d : -f 2`
+
+start(){
+    cd /opt/graphite;
+
+    for INSTANCE in ${INSTANCES}; do
+        if [ "${INSTANCE}" == "cache" ]; then INSTANCE="a"; fi
+
+        log_action_begin_msg "Starting carbon-cache:${INSTANCE}"
+        bin/carbon-cache.py --instance=${INSTANCE} start;
+
+        if [ $? -eq 0 ]; then log_success_msg; else log_failure_msg; fi
+        echo
+    done;
+}
+
+stop(){
+    cd /opt/graphite
+
+    for INSTANCE in ${INSTANCES}; do
+        if [ "${INSTANCE}" == "cache" ]; then INSTANCE="a"; fi
+
+        log_action_begin_msg "Stopping carbon-cache:${INSTANCE}"
+        bin/carbon-cache.py --instance=${INSTANCE} stop
+
+        if [ `sleep 3; /usr/bin/pgrep -f "carbon-cache.py --instance=${INSTANCE}" | /usr/bin/wc -l` -gt 0 ]; then
+            echo "Carbon did not stop yet. Sleeping longer, then force killing it...";
+            sleep 20;
+            /usr/bin/pkill -9 -f "carbon-cache.py --instance=${INSTANCE}";
+        fi;
+
+        if [ $? -eq 0 ]; then log_success_msg; else log_failure_msg; fi
+        echo
+    done;
+}
+
+status(){
+    cd /opt/graphite;
+
+    for INSTANCE in ${INSTANCES}; do
+        if [ "${INSTANCE}" == "cache" ]; then INSTANCE="a"; fi
+
+        bin/carbon-cache.py --instance=${INSTANCE} status;
+
+        if [ $? -eq 0 ]; then log_success_msg; else log_failure_msg; fi
+        echo
+    done;
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  status)
+    status
+    ;;
+  restart|reload)
+    stop
+    start
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|restart|status}"
+    exit 1
+esac

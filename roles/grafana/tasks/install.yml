@@ -1,0 +1,25 @@
+- name: install apt xxx
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - adduser
+    - libfontconfig
+
+- name: install file /apps
+  file:
+   path: /apps
+   recurse: yes
+   follow: true
+   state: directory
+
+- name: install get_url grafana_xxx_armhf.deb
+  get_url:
+    url: "https://github.com/fg2it/grafana-on-raspberry/releases/download/v{{ install_grafana_version }}/grafana_{{ install_grafana_version }}_armhf.deb"
+    dest: "/apps/grafana-{{ install_grafana_version }}.deb"
+  notify:
+    - grafana shell dpkg -i /apps/grafana-xxx.deb
+
+- name: install user grafana
+  user:
+    name: grafana
+    shell: /bin/bash

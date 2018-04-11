@@ -1,0 +1,31 @@
+- name: config copy xxx.conf
+  copy:
+    src: "config/{{ item }}"
+    dest: "/opt/graphite/conf/{{ item }}"
+  with_items:
+    - storage-schemas.conf
+    - carbon.conf
+  notify:
+    - graphite service carbon restarted
+
+- name: config copy config/nginx
+  copy:
+    src: config/nginx
+    dest: /etc/nginx/sites-available/graphite
+    mode: 0644
+  notify:
+    - graphite service nginx restarted
+
+- name: config file /etc/nginx/sites-enabled/default
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: config file /etc/nginx/sites-available/graphite
+  file:
+    src: /etc/nginx/sites-available/graphite
+    dest: /etc/nginx/sites-enabled
+    state: link
+    force: true
+  notify:
+    - graphite service nginx restarted

@@ -1,0 +1,7 @@
+- name: monitor copy monitor/grafana.conf
+  copy:
+    src: monitor/grafana.conf
+    dest: /etc/monit.d/grafana.conf
+    mode: 0644
+  notify:
+    - monit service monit restarted

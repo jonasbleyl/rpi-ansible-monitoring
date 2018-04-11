@@ -1,0 +1,21 @@
+- name: graphite service graphite restarted
+  service:
+    name: graphite
+    state: restarted
+
+- name: graphite service carbon restarted
+  service:
+    name: carbon
+    state: restarted
+
+- name: graphite service nginx restarted
+  service:
+    name: nginx
+    state: restarted
+
+- name: graphite systemd daemon_reload
+  systemd:
+    daemon_reload: true
+
+- name: graphite shell django-admin.py migrate
+  shell: PYTHONPATH=/opt/graphite/webapp django-admin.py migrate --settings=graphite.settings --run-syncdb

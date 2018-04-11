@@ -1,0 +1,54 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          graphite
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+### END INIT INFO
+
+. /lib/lsb/init-functions
+
+PROGNAME=graphite
+PIDFILE=/var/run/graphite.pid
+LOCKFILE=/var/lock/subsys/graphite
+LOGFILE=/var/log/graphite.log
+
+case "$1" in
+  start)
+    echo -n "Starting $PROGNAME: "
+    PYTHONPATH=/opt/graphite/webapp \
+          /usr/local/bin/gunicorn wsgi \
+          --bind 127.0.0.1:8080 \
+          --pythonpath /opt/graphite/webapp/graphite \
+          --daemon \
+          --error-logfile $LOGFILE \
+          --pid $PIDFILE \
+          --workers 4; sleep 1; >>$LOGFILE 2>&1
+
+    if [ $? -eq 0 ]; then log_success_msg; else log_failure_msg; fi
+
+    touch $LOCKFILE
+    echo
+    ;;  
+  stop)
+    echo -n "Stopping $PROGNAME: "
+    /usr/bin/pkill -9 -F $PIDFILE >>$LOGFILE 2>&1
+
+    if [ $? -eq 0 ]; then log_success_msg; else log_failure_msg; fi
+
+    rm -f $LOCKFILE $PIDFILE
+    echo
+    ;;  
+  restart)
+    $0 stop
+    $0 start
+    ;;  
+  status)
+    status -p $PIDFILE $PROGNAME
+    ;;  
+  *)  
+    echo "Usage: $0 start|stop|restart|status" >&2
+    exit 3
+    ;;  
+esac

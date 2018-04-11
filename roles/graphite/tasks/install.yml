@@ -1,0 +1,26 @@
+- name: install apt xxx
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - python-dev
+    - libcairo2-dev
+    - libffi-dev
+    - build-essential
+    - nginx
+
+- name: install pip gunicorn
+  pip:
+    name: gunicorn
+
+- name: install pip xxx
+  pip:
+    name: "{{ item }}"
+    extra_args: "--no-binary=:all:"
+  environment:
+    PYTHONPATH: "{{ ansible_env.PATH }}:/opt/graphite/lib/:/opt/graphite/webapp/"
+  with_items:
+    - https://github.com/graphite-project/whisper/tarball/master
+    - https://github.com/graphite-project/carbon/tarball/master
+    - https://github.com/graphite-project/graphite-web/tarball/master
+  notify:
+    - graphite shell django-admin.py migrate

@@ -1,0 +1,4 @@
+- name: monit service monit restarted
+  service:
+    name: monit
+    state: restarted

@@ -1,0 +1,19 @@
+- name: config file /etc/grafana
+  file:
+   path: /etc/grafana
+   recurse: yes
+   follow: true
+   state: directory
+
+- name: config copy /etc/grafana/grafana.ini
+  copy:
+    src: config/grafana.ini
+    dest: /etc/grafana/grafana.ini
+    mode: 0644
+  notify:
+    - grafana service grafana-server restarted
+
+- name: config service grafana-server
+  service:
+    name: grafana-server
+    enabled: true

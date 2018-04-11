@@ -1,0 +1,7 @@
+- name: grafana service grafana-server restarted
+  service:
+    name: grafana-server
+    state: restarted
+
+- name: grafana shell dpkg -i /apps/grafana-xxx.deb
+  shell: dpkg -i "/apps/grafana-{{ install_grafana_version }}.deb"

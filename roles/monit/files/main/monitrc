@@ -1,0 +1,9 @@
+set daemon 120
+set logfile /var/log/monit.log
+set idfile /var/.monit.id
+set statefile /var/lib/monit/state
+set httpd port 2812
+  use address localhost
+  allow localhost
+
+include /etc/monit.d/*

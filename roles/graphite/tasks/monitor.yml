@@ -1,0 +1,53 @@
+- name: monitor copy /etc/monit.d/nginx.conf
+  copy:
+    src: monitor/nginx.conf
+    dest: /etc/monit.d/nginx.conf
+    mode: 0644
+  notify:
+    - monit service monit restarted
+
+- name: monitor copy /etc/init.d/carbon
+  copy:
+    src: monitor/carbon.initd
+    dest: /etc/init.d/carbon
+    mode: 0755
+  notify:
+    - graphite systemd daemon_reload
+    - graphite service carbon restarted
+
+- name: monitor service carbon
+  service:
+    name: carbon
+    state: started
+    enabled: true
+
+- name: monitor copy /etc/monit.d/carbon.conf
+  copy:
+    src: monitor/carbon.conf
+    dest: /etc/monit.d/carbon.conf
+    mode: 0644
+  notify:
+    - monit service monit restarted
+
+- name: monitor copy /etc/init.d/graphite
+  copy:
+    src: monitor/graphite.initd
+    dest: /etc/init.d/graphite
+    mode: 0755
+  notify:
+    - graphite systemd daemon_reload
+    - graphite service graphite restarted
+
+- name: monitor service graphite
+  service:
+    name: graphite
+    state: started
+    enabled: true
+
+- name: monitor copy /etc/monit.d/graphite.conf
+  copy:
+    src: monitor/graphite.conf
+    dest: /etc/monit.d/graphite.conf
+    mode: 0644
+  notify:
+    - monit service monit restarted

@@ -1,0 +1,23 @@
+- name: main apt monit
+  apt:
+    name: monit
+
+- name: main service monit started
+  service:
+    name: monit
+    state: started
+    enabled: true
+
+- name: main copy /etc/monit/monitrc
+  copy:
+    src: main/monitrc
+    dest: /etc/monit/monitrc
+    mode: 0600
+  notify:
+    - monit service monit restarted
+
+- name: main file /etc/monit.d
+  file:
+    path: /etc/monit.d
+    state: directory
+    mode: 0755
