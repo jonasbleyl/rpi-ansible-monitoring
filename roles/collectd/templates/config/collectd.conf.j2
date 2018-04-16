@@ -1,0 +1,42 @@
+Hostname "{{ inventory_hostname }}"
+
+LoadPlugin cpu
+LoadPlugin df
+LoadPlugin disk
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin write_graphite
+
+<Plugin cpu>
+  ReportByCpu false
+  ReportByState false
+  ValuesPercentage true
+</Plugin>
+
+<Plugin df>
+  ValuesAbsolute false
+  ValuesPercentage true
+</Plugin>
+
+<Plugin load>
+  ReportRelative true
+</Plugin>
+
+<Plugin memory>
+  ValuesAbsolute false
+  ValuesPercentage true
+</Plugin>
+
+<Plugin write_graphite>
+  <Node "pi">
+    Host "localhost"
+    Port "2003"
+    Protocol "tcp"
+    Prefix "collectd."
+    EscapeCharacter "-"
+  </Node>
+</Plugin>
+
+<Include "/etc/collectd/collectd.conf.d">
+	Filter "*.conf"
+</Include>

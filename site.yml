@@ -3,4 +3,5 @@
   roles:
     - monit
     - graphite
+    - collectd
     - grafana

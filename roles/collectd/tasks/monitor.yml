@@ -1,0 +1,7 @@
+- name: monitor copy monitor/collectd.conf
+  copy:
+    src: monitor/collectd.conf
+    dest: /etc/monit.d/collectd.conf
+    mode: 0644
+  notify:
+    - monit service monit restarted

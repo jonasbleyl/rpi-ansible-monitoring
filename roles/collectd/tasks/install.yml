@@ -1,0 +1,9 @@
+- name: config shell cp -r client server
+  shell: cp -r client server
+  args:
+    chdir: /usr/lib/jvm/java-8-openjdk-armhf/jre/lib/arm
+    creates: /usr/lib/jvm/java-8-openjdk-armhf/jre/lib/arm/server
+
+- name: install apt collectd
+  apt:
+    name: collectd

@@ -1,0 +1,4 @@
+- name: collectd service collectd restarted
+  service:
+    name: collectd
+    state: restarted
