@@ -5,6 +5,7 @@ LoadPlugin df
 LoadPlugin disk
 LoadPlugin load
 LoadPlugin memory
+LoadPlugin interface
 LoadPlugin write_graphite
 
 <Plugin cpu>
@@ -27,6 +28,10 @@ LoadPlugin write_graphite
   ValuesPercentage true
 </Plugin>
 
+<Plugin interface>
+  Interface "eth0"
+</Plugin>
+
 <Plugin write_graphite>
   <Node "pi">
     Host "localhost"
@@ -38,5 +43,5 @@ LoadPlugin write_graphite
 </Plugin>
 
 <Include "/etc/collectd/collectd.conf.d">
-	Filter "*.conf"
+  Filter "*.conf"
 </Include>
