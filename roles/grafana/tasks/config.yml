@@ -12,8 +12,3 @@
     mode: 0644
   notify:
     - grafana service grafana-server restarted
-
-- name: config service grafana-server
-  service:
-    name: grafana-server
-    enabled: true
