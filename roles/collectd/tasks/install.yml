@@ -1,3 +1,8 @@
+- name: install apt openjdk-8-jre-headless
+  apt:
+    name: openjdk-8-jre-headless
+  ignore_errors: true
+
 - name: config shell cp -r client server
   shell: cp -r client server
   args:

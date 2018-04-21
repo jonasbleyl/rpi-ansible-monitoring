@@ -7,7 +7,7 @@ Create a Raspberry Pi monitoring server with Graphite + Grafana.
 ## Prerequisites
 
  * Ansible
- * Raspberry Pi (Only tested with Pi 3 Model B) 
+ * Raspberry Pi with Raspbian Stretch (Only tested with Pi 3 Model B)
  
 You may want to change whisper's retention periods for your metrics in `roles/graphite/files/config/storage-schemas.conf`.
 A few are provided with a default of:
